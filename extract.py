@@ -11,7 +11,7 @@ from langchain.agents import AgentType
 
 # import the API key
 import dotenv
-dotenv.load_dotenv()
+dotenv.load_dotenv(dotenv_path="D:\SVCE\Chatgpt\.env")
 
 
 #input
