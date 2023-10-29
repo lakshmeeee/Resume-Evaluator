@@ -9,6 +9,8 @@ from langchain.chains import RetrievalQA
 from langchain.agents import initialize_agent
 from langchain.agents import AgentType
 
+import dotenv
+dotenv.load_dotenv()
 
 #input
 class DocInput(BaseModel):
@@ -51,4 +53,4 @@ def call_agent(inp):
         verbose=True,
     )
 
-    agent({"input": inp})
+    return agent({"input": inp})

@@ -18,7 +18,7 @@ dotenv.load_dotenv()
 
 st.set_page_config(layout='wide')
 
-st.title('Resume Evaluator and Upskill recommendor')
+st.title('Resume Evaluator and Upskill Recommender')
 
 col1, col2 = st.columns([2,1])
 
@@ -30,10 +30,7 @@ chat = ChatOpenAI(temperature=0, model="gpt-3.5-turbo-0613")
 if 'resume_data' not in st.session_state:
     st.session_state.resume_data = ""
 
-if 'messages' not in st.session_state:
-    st.session_state.messages = [
-        SystemMessage(content=f"You are a resume parser. \n This is a resume.\n {st.session_state.resume_data} \n Answer the following questions using the resume given above. Don't add any new information that is not present in the resume.")
-    ]
+
 if 'is_file_uploaded' not in st.session_state:
     st.session_state.is_file_uploaded = False
 
@@ -47,6 +44,10 @@ with st.sidebar:
     )
 
 if selected == 'Chat':
+    if 'messages' not in st.session_state:
+        st.session_state.messages = [
+        SystemMessage(content=f"You are a resume parser. \n This is a resume.\n {st.session_state.resume_data} \n Answer the following questions using the resume given above. Don't add any new information that is not present in the resume.")
+    ]
     if not st.session_state.is_file_uploaded:
         st.write('Upload your resume first to enable the chat feature!')
     else:
@@ -64,9 +65,10 @@ if selected == 'Chat':
                 message(msg.content, is_user=False, key=str(i)+'_ai')
 
 elif selected == "Resume Evaluator":
+    uploaded_file=""
     with col2:
         if not st.session_state.is_file_uploaded:
-            uploaded_file = st.file_uploader("Upload your resume here")
+            uploaded_file = st.file_uploader("Upload your Resume here")
             l = Load()
             if uploaded_file:
                 st.session_state.resume_file_name = uploaded_file.name
@@ -75,13 +77,13 @@ elif selected == "Resume Evaluator":
         else:
             st.write(f"Your resume, {st.session_state.resume_file_name} is uploaded successfully")
         with st.form('job_descrption'):
-            txt = st.text_area("Enter your job descrption here")
+            txt = st.text_area("Enter your Job Descrption here")
             submitted = st.form_submit_button('Evaluate')
             if submitted and txt != "" and uploaded_file is not None:
-                tool_creation("resume", resume_data)
+                tool_creation("resume", st.session_state.resume_data)
                 tool_creation("job_description", txt)
                 st.write('Calling API...')
-                out = call_agent("Are the skills in job description and resume matching?")
+                out = call_agent("Are the skills in job description and resume matching? Give me a match percentage score for it.")
                 st.session_state.api_results = out["output"]
             elif submitted and not uploaded_file:
                 st.write('No file uploaded! Please upload the file!')
@@ -90,6 +92,6 @@ elif selected == "Resume Evaluator":
 
     with col1:
         if st.session_state.api_results == "":
-            st.write('Your evalutation results will be displayed here')
+            st.write('Your evaluation results will be displayed here')
         else:
             st.write(st.session_state.api_results)
