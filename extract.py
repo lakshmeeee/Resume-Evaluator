@@ -9,10 +9,6 @@ from langchain.chains import RetrievalQA
 from langchain.agents import initialize_agent
 from langchain.agents import AgentType
 
-# import the API key
-import dotenv
-dotenv.load_dotenv(dotenv_path="D:\SVCE\Chatgpt\.env")
-
 
 #input
 class DocInput(BaseModel):
