@@ -83,7 +83,7 @@ elif selected == "Resume Evaluator":
                 tool_creation("resume", st.session_state.resume_data)
                 tool_creation("job_description", txt)
                 st.write('Calling API...')
-                out = call_agent("Are the skills in job description and resume matching? Give me a match percentage score for it.")
+                out = call_agent("Are the skills in job description and resume matching?")
                 st.session_state.api_results = out["output"]
             elif submitted and not uploaded_file:
                 st.write('No file uploaded! Please upload the file!')
